@@ -222,7 +222,7 @@ int main(int argc, char **argv)
        <<  now->tm_min << '-'
        <<  now->tm_sec << ".csv";
 
-    string results_file_name = ss.str();
+    string results_file_name ="DataForEvaluation.csv"; //ss.str();
 
     if (mpi_rank == 0)
       {
