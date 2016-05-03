@@ -100,6 +100,11 @@ void CPFA_controller::ControlStep() {
 }
 
 void CPFA_controller::Reset() {
+	/*tempData.ResourceDensity=0;
+	tempData.pheromoneLaid=false;
+	tempData.sitefidelityfollowed=false;
+	tempData.pheromoneFollowed=false;	
+	LOG<<"Reset Called";*/
 }
 
 bool CPFA_controller::IsHoldingFood() {
@@ -442,6 +447,8 @@ void CPFA_controller::Returning() {
     if(IsInTheNest() == true) {
         // Based on a Poisson CDF, the robot may or may not create a pheromone
         // located at the last place it picked up food.
+        //LOG<<ResourceDensity<<endl;
+        tempData.ResourceDensity=ResourceDensity;
         argos::Real poissonCDF_pLayRate    = GetPoissonCDF(ResourceDensity, LoopFunctions->RateOfLayingPheromone);
         argos::Real poissonCDF_sFollowRate = GetPoissonCDF(ResourceDensity, LoopFunctions->RateOfSiteFidelity);
         argos::Real r1 = RNG->Uniform(argos::CRange<argos::Real>(0.0, 1.0));
@@ -455,7 +462,10 @@ void CPFA_controller::Returning() {
                 LoopFunctions->PheromoneList.push_back(sharedPheromone);
                 TrailToShare.clear();
                 sharedPheromone.Deactivate(); // make sure this won't get re-added later...
+                //LOG<<"Pheromone laid\n";
+                tempData.pheromoneLaid=1;
 	}
+	else tempData.pheromoneLaid=0;
 
         // Determine probabilistically whether to use site fidelity, pheromone
         // trails, or random search.
@@ -467,8 +477,9 @@ void CPFA_controller::Returning() {
         // use site fidelity
         if((isUsingSiteFidelity == true) && (poissonCDF_sFollowRate > r2)) 
 	  {
-	    //log_output_stream << "Using site fidelity" << endl;
-	
+	    //LOG << "Using site fidelity" << endl;
+		tempData.pheromoneFollowed=0;
+        tempData.sitefidelityfollowed=1;
 	    SetIsHeadingToNest(false);
             SetTarget(SiteFidelityPosition);
             isInformed = true;
@@ -476,7 +487,9 @@ void CPFA_controller::Returning() {
         // use pheromone waypoints
         else if(SetTargetPheromone() == true) 
 	  {
-	    //log_output_stream << "Using site pheremone" << endl;	    
+	  	tempData.pheromoneFollowed=1;
+        tempData.sitefidelityfollowed=0;
+	    //LOG << "Using site pheremone" << endl;	    
             isInformed = true;
             isUsingSiteFidelity = false;
         }
@@ -486,6 +499,8 @@ void CPFA_controller::Returning() {
             SetRandomSearchLocation();
             isInformed = false;
             isUsingSiteFidelity = false;
+            tempData.pheromoneFollowed=0;
+        	tempData.sitefidelityfollowed=0;
         }
 
 	// Record that a target has been retrieved
@@ -509,7 +524,8 @@ void CPFA_controller::Returning() {
 	isGivingUpSearch = false;
 	CPFA_state = DEPARTING;   
 	isHoldingFood = false;
-
+	//LOG<<tempData.ResourceDensity<<" "<<tempData.pheromoneLaid<<" "<<tempData.sitefidelityfollowed<<" "<<tempData.pheromoneFollowed<<endl;
+	LoopFunctions->dataExtractor.push_back(tempData);
 	//log_output_stream.close();
     }
     else // Take a small step towards the nest so we don't overshoot by too much is we miss it

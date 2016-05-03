@@ -1,6 +1,7 @@
 #ifndef CPFA_LOOP_FUNCTIONS_H
 #define CPFA_LOOP_FUNCTIONS_H
-
+// /#include"DataExtractor.cpp"
+#include <fstream>
 
 #include <argos3/core/simulator/loop_functions.h>
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
@@ -65,7 +66,7 @@ public:
 	double getRateOfSiteFidelity();
 	double getRateOfLayingPheromone();
 	double getRateOfPheromoneDecay();
-
+    std::vector<DataExtractor> dataExtractor;
     protected:
 
 	void setScore(double s);
@@ -117,6 +118,7 @@ public:
         argos::CRange<argos::Real>   ForageRangeY;
 
         argos::CVector2 NestPosition;
+
 
     private:
 

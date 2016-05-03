@@ -170,6 +170,15 @@ bool CPFA_loop_functions::IsExperimentFinished() {
 void CPFA_loop_functions::PostExperiment() 
 {
   if (PrintFinalScore == 1) printf("%f, %f\n", getSimTimeInSeconds(), score);
+  //printf("size is %d\n",dataExtractor.size() );
+  ofstream dataOutputPosition("ActivityData.txt", ios::out);
+  dataOutputPosition<< "Resource Density\tPheromone Laid\tPheromone Followed\tSite Fidelity Followed\n";
+  for (int i = 0; i <dataExtractor.size(); i++)
+  {
+    dataOutputPosition<<dataExtractor[i].ResourceDensity<<"\t"<<dataExtractor[i].pheromoneLaid<<"\t"<<dataExtractor[i].pheromoneFollowed<<"\t"<<dataExtractor[i].sitefidelityfollowed<<"\n";
+  }
+  dataOutputPosition.close();
+
 }
 
 argos::CColor CPFA_loop_functions::GetFloorColor(const argos::CVector2 &c_pos_on_floor) {
