@@ -96,7 +96,7 @@
       <position method="grid"
                 center="0.0, 0.0, 0.0"
                 distances="0.2, 0.2, 0.0"
-                layout="2, 3, 1" />
+                layout="4, 3, 1" />
       <orientation method="constant" values="0.0, 0.0, 0.0" />
       <entity quantity="12" max_trials="100">
         <foot-bot id="CPFA_">
@@ -123,14 +123,14 @@
   <!-- * Visualization * -->
   <!-- ****************** -->
   <visualization>
-<!--
+<!---->
 <qt-opengl>
       <camera>
         <placement idx="0" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="25"/>
       </camera>
       <user_functions label="CPFA_qt_user_functions"/>
     </qt-opengl>
--->
+
   </visualization>
 
 </argos-configuration>

@@ -308,19 +308,27 @@ void CPFA_loop_functions::PowerLawFoodDistribution() {
   std::vector<size_t> clusterSides;
   argos::CVector2     placementPosition;
 
-  for(size_t i = 0; i < PowerRank; i++) {
-    powerLawClusters.push_back(powerLawLength * powerLawLength);
-    powerLawLength *= 2;
-  }
+    for(size_t i = 0; i < PowerRank; i++) {
+        if(PowerRank==5 && i==3)
+        powerLawLength *= 2;
+        else{
+            powerLawClusters.push_back(powerLawLength * powerLawLength);
+            powerLawLength *= 2;
+        }   
+    }
 
-  for(size_t i = 0; i < PowerRank; i++) {
-    powerLawLength /= 2;
-    clusterSides.push_back(powerLawLength);
-  }
-
-  for(size_t h = 0; h < powerLawClusters.size(); h++) {
-    for(size_t i = 0; i < powerLawClusters[h]; i++) {
-      placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
+    for(size_t i = 0; i < PowerRank; i++) {
+        if(PowerRank==5 && i==3)
+            powerLawLength /= 2;
+        else{
+            powerLawLength /= 2;
+            clusterSides.push_back(powerLawLength);
+            }
+        
+    }
+    for(size_t h = 0; h < powerLawClusters.size(); h++) {
+        for(size_t i = 0; i < powerLawClusters[h]; i++) {
+            placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
 
       while(IsOutOfBounds(placementPosition, clusterSides[h], clusterSides[h])) {
 	trialCount++;
