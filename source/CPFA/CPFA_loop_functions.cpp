@@ -317,37 +317,64 @@ void CPFA_loop_functions::PowerLawFoodDistribution() {
   std::vector<size_t> clusterSides;
   argos::CVector2     placementPosition;
 
-  for(size_t i = 0; i < PowerRank; i++) {
-    powerLawClusters.push_back(powerLawLength * powerLawLength);
-    powerLawLength *= 2;
-  }
+    for(size_t i = 0; i < PowerRank; i++) {
+        if(PowerRank==5 && i==3)
+        powerLawLength *= 2;
+        else{
+            powerLawClusters.push_back(powerLawLength * powerLawLength);
+            powerLawLength *= 2;
+        }   
+    }
 
-  for(size_t i = 0; i < PowerRank; i++) {
-    powerLawLength /= 2;
-    clusterSides.push_back(powerLawLength);
-  }
+    for(size_t i = 0; i < PowerRank; i++) {
+        if(PowerRank==5 && i==3)
+            powerLawLength /= 2;
+        else{
+            powerLawLength /= 2;
+            clusterSides.push_back(powerLawLength);
+            }
+        
+    }
+    for(size_t h = 0; h < powerLawClusters.size(); h++) {
+        for(size_t i = 0; i < powerLawClusters[h]; i++) {
+            placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
+			/*
+			Added by Safeeul Bashir Safee
+			To check first seed resides in the circle or not. 
+			*/
+			while(IsOutSideRing(placementPosition))
+			{
+				trialCount++;
+				placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
 
-  for(size_t h = 0; h < powerLawClusters.size(); h++) {
-    for(size_t i = 0; i < powerLawClusters[h]; i++) {
-      placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
+				if(trialCount > maxTrials) 
+				{
+	  				argos::LOGERR << "PowerLawDistribution(): Max trials exceeded!\n";
+	  				break;
+				}
+			}
+			trialCount=0;
+      		while(IsOutOfBounds(placementPosition, clusterSides[h], clusterSides[h])) 
+      		{
+				trialCount++;
+				placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
 
-      while(IsOutOfBounds(placementPosition, clusterSides[h], clusterSides[h])) {
-	trialCount++;
-	placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
+				if(trialCount > maxTrials) 
+				{
+	  				argos::LOGERR << "PowerLawDistribution(): Max trials exceeded!\n";
+	  				break;
+				}
+      		}
 
-	if(trialCount > maxTrials) {
-	  argos::LOGERR << "PowerLawDistribution(): Max trials exceeded!\n";
-	  break;
-	}
-      }
-
-      for(size_t j = 0; j < clusterSides[h]; j++) {
-	for(size_t k = 0; k < clusterSides[h]; k++) {
-	  foodPlaced++;
-	  FoodList.push_back(placementPosition);
-	  FoodColoringList.push_back(argos::CColor::BLACK);
-	  placementPosition.SetX(placementPosition.GetX() + foodOffset);
-	}
+      		for(size_t j = 0; j < clusterSides[h]; j++) 
+      		{
+				for(size_t k = 0; k < clusterSides[h]; k++) 
+				{
+	  				foodPlaced++;
+	  				FoodList.push_back(placementPosition);
+	  				FoodColoringList.push_back(argos::CColor::BLACK);
+	  				placementPosition.SetX(placementPosition.GetX() + foodOffset);
+				}
 
 	placementPosition.SetX(placementPosition.GetX() - (clusterSides[h] * foodOffset));
 	placementPosition.SetY(placementPosition.GetY() + foodOffset);
@@ -395,6 +422,15 @@ bool CPFA_loop_functions::IsOutOfBounds(argos::CVector2 p, size_t length, size_t
   return false;
 }
 
+bool CPFA_loop_functions::IsOutSideRing(CVector2 p)
+{
+ if(sqrt((p-NestPosition).SquareLength())>10 || sqrt((p-NestPosition).SquareLength())<3)
+            {
+                return true;   
+            }
+ return false;
+            
+}
 /*****
  *
  *****/

@@ -129,6 +129,7 @@ public:
         bool IsOutOfBounds(argos::CVector2 p, size_t length, size_t width);
         bool IsCollidingWithNest(argos::CVector2 p);
         bool IsCollidingWithFood(argos::CVector2 p);
+		bool IsOutSideRing(CVector2 p);
 	double score;
 	int PrintFinalScore;
 };
