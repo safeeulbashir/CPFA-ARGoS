@@ -178,6 +178,18 @@ void CPFA_loop_functions::PostExperiment()
     dataOutputPosition<<dataExtractor[i].ResourceDensity<<"\t"<<dataExtractor[i].pheromoneLaid<<"\t"<<dataExtractor[i].pheromoneFollowed<<"\t"<<dataExtractor[i].sitefidelityfollowed<<"\n";
   }
   dataOutputPosition.close();
+   ofstream dataOutput("iAntFoodPosition.txt", ios::out);
+        dataOutput
+                << "Pile ID\tDistribution Type\tX-Position\tY-Position\tPickup Time\tDrop Off Time\tAnt ID\n";
+        for (int i = 0; i <food_details.size(); i++) {
+            dataOutput<< food_details[i].getPileId() << "\t"
+                    << food_details[i].getDistributionType() << "\t"
+                    << food_details[i].getPosition().GetX() << "\t"
+                    << food_details[i].getPosition().GetY() << "\t"
+                    <<food_details[i].getPickUpTime()<<"\t"
+                    << food_details[i].getCollectionTime() << "\t"
+                    << food_details[i].getAntId() << "\n";
+        }
 
 }
 
@@ -312,7 +324,7 @@ void CPFA_loop_functions::PowerLawFoodDistribution() {
   size_t      powerLawLength = 1;
   size_t      maxTrials      = 200;
   size_t      trialCount     = 0;
-
+  iAnt_food_type food;
   std::vector<size_t> powerLawClusters;
   std::vector<size_t> clusterSides;
   argos::CVector2     placementPosition;
@@ -335,6 +347,7 @@ void CPFA_loop_functions::PowerLawFoodDistribution() {
             }
         
     }
+    size_t pileIdCounter=1;
     for(size_t h = 0; h < powerLawClusters.size(); h++) {
         for(size_t i = 0; i < powerLawClusters[h]; i++) {
             placementPosition.Set(RNG->Uniform(ForageRangeX), RNG->Uniform(ForageRangeY));
@@ -370,7 +383,17 @@ void CPFA_loop_functions::PowerLawFoodDistribution() {
       		{
 				for(size_t k = 0; k < clusterSides[h]; k++) 
 				{
+					if(powerLawClusters[h]==256){
+                        pileIdCounter=0;
+						}
 	  				foodPlaced++;
+					food.setCollectionTime(-1);
+					food.setAntId(-1);
+					food.setPosition(placementPosition);
+					food.setDistributionType(powerLawClusters[h]);
+					food.setPileId(pileIdCounter);
+					food.setPickUpTime(-1);
+					food_details.push_back(food);
 	  				FoodList.push_back(placementPosition);
 	  				FoodColoringList.push_back(argos::CColor::BLACK);
 	  				placementPosition.SetX(placementPosition.GetX() + foodOffset);
@@ -379,6 +402,7 @@ void CPFA_loop_functions::PowerLawFoodDistribution() {
 	placementPosition.SetX(placementPosition.GetX() - (clusterSides[h] * foodOffset));
 	placementPosition.SetY(placementPosition.GetY() + foodOffset);
       }
+	  pileIdCounter++;
     }
   }
 

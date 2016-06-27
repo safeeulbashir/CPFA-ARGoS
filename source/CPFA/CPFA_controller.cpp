@@ -460,6 +460,7 @@ void CPFA_controller::Returning() {
                 argos::Real timeInSeconds = (argos::Real)(SimulationTick() / SimulationTicksPerSecond());
                 Pheromone sharedPheromone(SiteFidelityPosition, TrailToShare, timeInSeconds, LoopFunctions->RateOfPheromoneDecay);
                 LoopFunctions->PheromoneList.push_back(sharedPheromone);
+				
                 TrailToShare.clear();
                 sharedPheromone.Deactivate(); // make sure this won't get re-added later...
                 //LOG<<"Pheromone laid\n";
@@ -518,7 +519,15 @@ void CPFA_controller::Returning() {
 	    LoopFunctions->setScore(num_targets_collected);
 	    
 	     // We dropped off food. Clear the built-up pheromone trail.
-	    TrailToShare.clear();
+		size_t foodIdx;
+        for(foodIdx=0;foodIdx<LoopFunctions->food_details.size();foodIdx++)
+        {
+            if(LoopFunctions->food_details[foodIdx].getPosition()==FoodItemInHold)
+                break;
+                
+        }
+        LoopFunctions->food_details[foodIdx].setCollectionTime(LoopFunctions->getSimTimeInSeconds());
+  	    TrailToShare.clear();
 	  }
 
 	isGivingUpSearch = false;
@@ -587,7 +596,16 @@ void CPFA_controller::SetHoldingFood() {
 	  {
             if((GetPosition() - LoopFunctions->FoodList[i]).SquareLength() < FoodDistanceTolerance ) {
                 // We found food! Calculate the nearby food density.
+				FoodItemInHold=LoopFunctions->FoodList[i];
                 isHoldingFood = true;
+				size_t foodIdx;
+                for(foodIdx=0;foodIdx<LoopFunctions->food_details.size();foodIdx++)
+                {
+                    if(LoopFunctions->food_details[foodIdx].getPosition()==FoodItemInHold)
+                        break;
+                
+                }
+                LoopFunctions->food_details[foodIdx].setPickUpTime(LoopFunctions->getSimTimeInSeconds());
 		CPFA_state = SURVEYING;
                 j = i + 1;
                 break;

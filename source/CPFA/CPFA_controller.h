@@ -56,6 +56,7 @@ class CPFA_controller : public BaseController {
         size_t ResourceDensity;
         size_t MaxTrailSize;
         size_t SearchTime;
+		argos::CVector2 FoodItemInHold;
 
         /* iAnt CPFA state variable */
         enum CPFA_state { DEPARTING = 0, SEARCHING = 1, RETURNING = 2, SURVEYING = 3 } CPFA_state;

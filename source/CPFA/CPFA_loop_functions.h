@@ -7,7 +7,7 @@
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 #include <argos3/core/simulator/entity/floor_entity.h>
 #include <source/CPFA/CPFA_controller.h>
-
+#include <source/iAnt_food_type.h>
 using namespace argos;
 
 static const size_t GENOME_SIZE = 7; // There are 7 parameters to evolve
@@ -90,6 +90,8 @@ public:
         size_t ClusterWidthX;
         size_t ClusterLengthY;
         size_t PowerRank;
+		std::vector<iAnt_food_type>        food_details;      // food item positions on the field
+		size_t pileIdCounter;
 
         /* CPFA variables */
         argos::Real ProbabilityOfSwitchingToSearching;
