@@ -460,6 +460,15 @@ void CPFA_controller::Returning() {
                 argos::Real timeInSeconds = (argos::Real)(SimulationTick() / SimulationTicksPerSecond());
                 Pheromone sharedPheromone(SiteFidelityPosition, TrailToShare, timeInSeconds, LoopFunctions->RateOfPheromoneDecay);
                 LoopFunctions->PheromoneList.push_back(sharedPheromone);
+				size_t foodIdx;
+				for(foodIdx=0;foodIdx<LoopFunctions->food_details.size();foodIdx++)
+				{
+					if(LoopFunctions->food_details[foodIdx].getPosition()==FoodItemInHold)
+						break;
+				
+				}
+				if(LoopFunctions->food_details[foodIdx].getPileId()!=0) //Checking if the seed is a random seed or not
+                	LoopFunctions->PheromoneDataForAllPile[LoopFunctions->food_details[foodIdx].getPileId()-1].push_back(LoopFunctions->getSimTimeInSeconds());
 				
                 TrailToShare.clear();
                 sharedPheromone.Deactivate(); // make sure this won't get re-added later...

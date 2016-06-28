@@ -90,6 +90,8 @@ public:
         size_t ClusterWidthX;
         size_t ClusterLengthY;
         size_t PowerRank;
+		std::vector< std::vector<int> > PheromoneDataForAllPile; // Added for recording all the pheromone trails from all the piles 
+        std::vector< std::vector<int> > SiteFidelityDataForAllPile;
 		std::vector<iAnt_food_type>        food_details;      // food item positions on the field
 		size_t pileIdCounter;
 

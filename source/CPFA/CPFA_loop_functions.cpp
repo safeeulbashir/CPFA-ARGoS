@@ -190,7 +190,12 @@ void CPFA_loop_functions::PostExperiment()
                     << food_details[i].getCollectionTime() << "\t"
                     << food_details[i].getAntId() << "\n";
         }
-
+	ofstream AllPheromoneTrailData("AllPheromoneTrailData.txt", ios::out);
+        for(int i=0;i<PheromoneDataForAllPile.size();i++){
+            for(int j=0;j<PheromoneDataForAllPile[i].size();j++)
+                AllPheromoneTrailData<<PheromoneDataForAllPile[i][j]<<" ";
+            AllPheromoneTrailData<<"\n";
+        }
 }
 
 argos::CColor CPFA_loop_functions::GetFloorColor(const argos::CVector2 &c_pos_on_floor) {
@@ -402,6 +407,13 @@ void CPFA_loop_functions::PowerLawFoodDistribution() {
 	placementPosition.SetX(placementPosition.GetX() - (clusterSides[h] * foodOffset));
 	placementPosition.SetY(placementPosition.GetY() + foodOffset);
       }
+            if(powerLawClusters[h]!=256){
+                vector<int> temp;
+                temp.push_back(int(pileIdCounter));
+                temp.push_back(int(powerLawClusters[h]));
+                PheromoneDataForAllPile.push_back(temp); 
+                SiteFidelityDataForAllPile.push_back(temp);                       
+            }
 	  pileIdCounter++;
     }
   }
