@@ -117,5 +117,5 @@ if __name__ == "__main__":
         saveInto="./"+sys.argv[11]+"FilesForRScript/"+splitter[0]+"_"+splitter[1]+".txt"
         np.savetxt(saveInto,sliding_windows[pile])
         proc=subprocess.Popen(["Rscript", "pyscripts/ChangePointDetector.R",saveInto,str(change_points),str(slide_movement),pathForPheromone,str(pile),dirname])
-        break
+        #break
 
