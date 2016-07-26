@@ -12,7 +12,7 @@ import errno
 import subprocess
 import signal
 # Example Call
-# python pyscripts/ChangePointCreator.py -w 60 -m 10 -l 5400 -d 1 -c 4 CPFA_saves/2016-06-28_18-37-00
+# python pyscripts/ChangePointCreatorDiff.py -w 60 -m 10 -l 5400 -d 1 -c 4 CPFA_saves/2016-06-28_18-37-00
 # -w =Window Size
 # -m sliding amount
 # -l Experiment Length
@@ -100,10 +100,10 @@ if __name__ == "__main__":
     
         collection_times = {}
         sliding_windows = {}
+        dataToWrite=[]
         for d in dist_types:
             collection_times[d] = np.zeros(length)
             sliding_windows[d] = []
-    
         for d, t in zip(data['Distribution Type'], data['Drop Off Time']):
             if t >= 0:
                 t = t 
@@ -114,8 +114,16 @@ if __name__ == "__main__":
             for d in dist_types:
                 sl = collection_times[d][(i*slide_movement):slmax]
                 sliding_windows[d].append(np.sum(sl))
+        dataToWrite.append(0)
+        for i in xrange(0, len(sliding_windows[pile])-1):
+            #if((sliding_windows[pile][i+1]-sliding_windows[pile][i])<0):
+            #    dataToWrite.append(0)
+            #else:
+            dataToWrite.append(sliding_windows[pile][i+1]-sliding_windows[pile][i])
         saveInto="./"+sys.argv[11]+"FilesForRScript/"+splitter[0]+"_"+splitter[1]+".txt"
-        np.savetxt(saveInto,sliding_windows[pile])
+        np.savetxt(saveInto,dataToWrite)
         proc=subprocess.Popen(["Rscript", "pyscripts/ChangePointDetector.R",saveInto,str(change_points),str(slide_movement),pathForPheromone,str(pile),dirname])
-        break
+        #break
+        
+
 

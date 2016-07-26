@@ -1,7 +1,7 @@
 library(changepoint)
 library(pracma)
 args <- commandArgs()
-args
+#args
 mydata=read.table(args[6])
 distributionType=as.numeric(args[10])
 data<-as.vector(mydata[,1])
@@ -44,15 +44,18 @@ while (length(oneLine <- readLines(con, n = 1, warn = FALSE)) > 0) {
     myVector <- list(as.numeric(myVector[[1]]))
     pheromoneList <- c(pheromoneList,myVector)
   } 
-pheromoneList
+#pheromoneList
 imagename=paste(argsplit2[[1]][[5]],"png",sep=".")
 imagename=paste("/",imagename,sep="")
 imagename=paste(args[11],imagename,sep="")
 png(filename=imagename)
-plot(cumsum1,col="red",lty=1,lwd=2,type="l",main = paste("Plot For ",argsplit2[[1]][[5]],sep=""), xlab = paste(args[8]," Seconds Sliding Window",sep=""), ylab = "Cumulative Sum")
+limits=seq(from=0, to=540, by=60)
+labels=seq(from=0, to=5400, by=600)
+plot(cumsum1,col="red",lty=1,lwd=2,xaxt='n',type="l",main = paste("Plot For ",argsplit2[[1]][[5]],sep=""), xlab = "Time(s)", ylab = " Detrended Cumulative Sum", cex=1.5)
+axis(1, at=limits,labels=labels, cex=1.5)
 points(xCordinate,yCordinate,pch=23)
 #legend("topright", inset=.05,c("Change Points in Seconds"), fill=terrain.colors(3), horiz=TRUE)
-text(xCordinate, yCordinate, xCordinate*as.numeric(args[8]), cex=0.6, pos=4, col="red")
+text(xCordinate, yCordinate, xCordinate*as.numeric(args[8]), cex=1.5, pos=4, col="blue",size=10)
 ########################################################
 #Determine the positions of Pheromones in sliding window
 ########################################################
@@ -102,7 +105,7 @@ if(upperrange!=0 && lowrange!=0){
 		#print(length(tempListXCord))
 	}
 } 
-##points(LayingTime,cumsum1[LayingTime],pch=21)
-##text(LayingTime, cumsum1[LayingTime], LayingTime*as.numeric(args[8]), cex=0.6, pos=4, col="green")
+points(LayingTime,cumsum1[LayingTime],pch=21)
+text(LayingTime, cumsum1[LayingTime], LayingTime*as.numeric(args[8]), cex=0.6, pos=4, col="green")
 dev.off()
 
