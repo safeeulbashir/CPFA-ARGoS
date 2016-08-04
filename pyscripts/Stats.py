@@ -70,7 +70,8 @@ for randomseed,cp1,cp2,cp3,cp4 in zip(ChangePoints['RandomSeed'],ChangePoints['C
 			else: falseP=-1
 		FalsePositive[count].append(falseP)
 		TruePositive[count].append(diff)
-
+	print randomseed
+	print TruePositive[count]
 	count=count+1
 print TruePositive
 print FalsePositive
