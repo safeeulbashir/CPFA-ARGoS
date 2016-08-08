@@ -12,7 +12,7 @@ import errno
 import subprocess
 import signal
 # Example Call
-# python pyscripts/ChangePointCreator.py -w 60 -m 10 -l 5400 -d 1 -c 4 CPFA_saves/2016-06-28_18-37-00
+# python pyscripts/ChangePointCreator.py -w 60 -m 10 -l 5400 -d 1 -c 4 -detrending 1 CPFA_saves/2016-06-28_18-37-00
 # -w =Window Size
 # -m sliding amount
 # -l Experiment Length
@@ -26,6 +26,7 @@ if __name__ == "__main__":
     parser.add_argument('-d', '--pile', action='store', dest='pile', type=int)
     parser.add_argument('-c', '--changePoints', action='store', dest='changePoints', type=int)
     parser.add_argument('directory',help='directory to use',action='store')
+    parser.add_argument('-detrending',help='Types of Detrending',action='store', dest="detrend", type=int)
     args = parser.parse_args()
     length = 5400
     if args.length:
@@ -42,13 +43,15 @@ if __name__ == "__main__":
     change_points=4
     if args.changePoints:
         change_points=args.changePoints 
-        
 
     pile = 1
     if args.pile:
         pile = args.pile
+    detrend = "constant"
+    if args.detrend:
+        detrend = args.detrend
 
-    # print sys.argv[11] for printing the directory
+    # print sys.argv[13] for printing the directory
     key_types = {'Distribution Type': int,
     'Ant ID': int,
     'Pile ID': int,
@@ -57,12 +60,12 @@ if __name__ == "__main__":
     'Pickup Time': float,
     'X-Position': float}
 
-    path = sys.argv[11]+"CPFARecording"
-    pathForPheromone=sys.argv[11]+"PheromoneRecordings/"
+    path = sys.argv[13]+"CPFARecording"
+    pathForPheromone=sys.argv[13]+"PheromoneRecordings/"
     # print pathForPheromone
     dirs = os.listdir( path )
     # For Saving Sliding Windows
-    dirname = "./"+sys.argv[11]+"FilesForRScript"
+    dirname = "./"+sys.argv[13]+"FilesForRScript"
     try:
         os.makedirs(dirname)
     except OSError as exc:  # Python >2.5
@@ -71,7 +74,7 @@ if __name__ == "__main__":
         else:
                 raise()
     #For Creating a directory to save plots
-    dirname = "./"+sys.argv[11]+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+"_w"+str(window_size)+"_l"+str(length)+"_s"+str(slide_movement)+"_c"+str(change_points)+"_p"+str(pile)
+    dirname = "./"+sys.argv[13]+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+"_w"+str(window_size)+"_l"+str(length)+"_s"+str(slide_movement)+"_c"+str(change_points)+"_p"+str(pile)
     try:
         os.makedirs(dirname)
     except OSError as exc:  # Python >2.5
@@ -114,8 +117,8 @@ if __name__ == "__main__":
             for d in dist_types:
                 sl = collection_times[d][(i*slide_movement):slmax]
                 sliding_windows[d].append(np.sum(sl))
-        saveInto="./"+sys.argv[11]+"FilesForRScript/"+splitter[0]+"_"+splitter[1]+".txt"
+        saveInto="./"+sys.argv[13]+"FilesForRScript/"+splitter[0]+"_"+splitter[1]+".txt"
         np.savetxt(saveInto,sliding_windows[pile])
-        proc=subprocess.Popen(["Rscript", "pyscripts/ChangePointDetector.R",saveInto,str(change_points),str(slide_movement),pathForPheromone,str(pile),dirname])
-        #break
+        proc=subprocess.Popen(["Rscript", "pyscripts/ChangePointDetector.R",saveInto,str(change_points),str(slide_movement),pathForPheromone,str(pile),dirname,str(detrend)])
+        break
 

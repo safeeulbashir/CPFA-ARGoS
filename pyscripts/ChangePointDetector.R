@@ -2,16 +2,22 @@ library(changepoint)
 library(pracma)
 args <- commandArgs()
 #args
+if(args[12]=="1")
+{
+	detrend="linear"
+}else {
+	detrend="constant"
+	}
 mydata=read.table(args[6])
 distributionType=as.numeric(args[10])
 data<-as.vector(mydata[,1])
 cumsum1=cumsum(data)
-cumsum1=detrend(cumsum1, 'constant')
+cumsum1=detrend(cumsum1, detrend)
 cumsum=binseg.mean.cusum(cumsum1,Q=as.numeric(args[7]),pen=2)
 cps=cumsum['cps']
 #cps
 cumsum1=cumsum(data)
-cumsum1=detrend(cumsum1, 'constant')
+cumsum1=detrend(cumsum1, detrend)
 xCordinate<-list()
 yCordinate<-list()
 cpsToWrite<-list()
@@ -37,6 +43,9 @@ randomseed=strsplit(argsplit2[[1]][[5]],"[_]")
 
 cpsToWrite=append(cpsToWrite, as.numeric(randomseed[[1]][[2]]), 0) # Adding Random Seed number before the change points
 filepath=paste(args[11],"ChangePoints.txt",sep="/") #Creating Filename
+if(!file.exists(filepath)){
+	write("Randomseed\tCP1\tCP2\tCP3\tCP4",file =filepath, append = TRUE)
+}
 write(cpsToWrite, file =filepath, append = TRUE, sep = "\t") #Writing changepoints to file
 ########################################
 #Colors for Diffrent Types of Pheromones
