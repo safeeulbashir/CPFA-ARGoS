@@ -87,7 +87,7 @@ if __name__ == "__main__":
     for file in dirs:
         #print file
         splitter= file.split("_")
-        #print splitter[0]
+        #print splitter[1]
         with open(path+"/"+file, 'r') as csvfile:
             reader = csv.DictReader(csvfile.readlines(), delimiter="\t")
         
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         collection_times = {}
         sliding_windows = {}
         for d in dist_types:
-            collection_times[d] = np.zeros(length)
+            collection_times[d] = np.zeros(length+1)
             sliding_windows[d] = []
     
         for d, t in zip(data['Distribution Type'], data['Drop Off Time']):
@@ -120,5 +120,5 @@ if __name__ == "__main__":
         saveInto="./"+sys.argv[13]+"FilesForRScript/"+splitter[0]+"_"+splitter[1]+".txt"
         np.savetxt(saveInto,sliding_windows[pile])
         proc=subprocess.Popen(["Rscript", "pyscripts/ChangePointDetector.R",saveInto,str(change_points),str(slide_movement),pathForPheromone,str(pile),dirname,str(detrend)])
-        break
+        #break
 

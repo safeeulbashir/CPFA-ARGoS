@@ -44,7 +44,7 @@ randomseed=strsplit(argsplit2[[1]][[5]],"[_]")
 cpsToWrite=append(cpsToWrite, as.numeric(randomseed[[1]][[2]]), 0) # Adding Random Seed number before the change points
 filepath=paste(args[11],"ChangePoints.txt",sep="/") #Creating Filename
 if(!file.exists(filepath)){
-	write("Randomseed\tCP1\tCP2\tCP3\tCP4",file =filepath, append = TRUE)
+	write("RandomSeed\tCP1\tCP2\tCP3\tCP4",file =filepath, append = TRUE)
 }
 write(cpsToWrite, file =filepath, append = TRUE, sep = "\t") #Writing changepoints to file
 ########################################
