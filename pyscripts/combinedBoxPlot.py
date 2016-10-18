@@ -6,6 +6,7 @@ from matplotlib.font_manager import FontProperties
 import os
 import re
 
+
 PathToAnalysis=sys.argv[1]
 pathTositeFidelityRecordingDir=PathToAnalysis+"SiteFidelityRecordings/"
 #print pathTositeFidelityRecordingDir

@@ -90,7 +90,7 @@ class DataGenerator():
             
             shutil.copyfile("iAntFoodPosition.txt", self.CPFARecordingDir+"/RandomSeed_"+str(seed)+"_iAntFoodPosition.txt")
             shutil.copyfile("AllPheromoneTrailData.txt",self.pheromoeRecodringDir+"/RandomSeed_"+str(seed)+".pheromone")
-            #shutil.copyfile("AllSiteFidelityData.txt",self.siteFidelityRecodringDir+"/RandomSeed_"+str(seed)+".siteFidelity")
+            shutil.copyfile("AllSFidelityData.txt",self.siteFidelityRecodringDir+"/RandomSeed_"+str(seed)+".siteFidelity")
 	    print "CPFA data recorded for Seed Distribution "+str(seed)+"\n"
 
 #if __name__ == "__main__":
