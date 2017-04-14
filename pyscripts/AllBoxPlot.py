@@ -136,7 +136,7 @@ for i in range(2,len(sys.argv)):
 fig, ax1 = plt.subplots(figsize=(10, 6))
 fig.canvas.set_window_title('A Boxplot Example')
 plt.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
-bp = plt.boxplot(totalTrueSelector,notch=0, sym='+', vert=1, whis=1.5)
+bp = plt.boxplot(totalTrueSelector,0, sym='', vert=1, whis=1.5)
 plt.setp(bp['boxes'], color='black')
 plt.setp(bp['whiskers'], color='black')
 plt.setp(bp['fliers'], color='red', marker='+')
@@ -145,12 +145,15 @@ plt.setp(bp['fliers'], color='red', marker='+')
 ax1.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',alpha=0.5)
 # Hide these grid behind plot objects
 ax1.set_axisbelow(True)
-ax1.set_title('Comparison of efficiency of Four Different method for Changepoint Detection')
+#Original
+#ax1.set_title('Comparison of efficiency of Four Different method for Changepoint Detection')
+#For Solo Plots.
+#ax1.set_title('Efficiency of Change point detection algorithm using Constant Detrended Cumulative Sum Method ',size=20) # on Change of Foraging Rate 
 #ax1.set_xlabel('Distribution')
-ax1.set_ylabel('Seconds(s)')
+ax1.set_ylabel('Seconds(s)',size=50)
 # Now fill the boxes with desired colors
-boxColors = ['darkkhaki', 'royalblue', 'green']
-numBoxes = 6
+boxColors = ['red', 'purple', 'green']
+numBoxes = 3
 medians = list(range(numBoxes))
 for i in range(numBoxes):
     box = bp['boxes'][i]
@@ -179,9 +182,13 @@ for i in range(numBoxes):
              color='w', marker='*', markeredgecolor='k')
     # Set the axes ranges and axes labels
 ax1.set_xlim(0.5, numBoxes + 0.5)
-top = 4000
-bottom = -100
+top =250
+bottom = -50
 ax1.set_ylim(bottom, top)
+for tick in ax1.yaxis.get_major_ticks():
+    tick.label.set_fontsize(30)
+for tick in ax1.xaxis.get_major_ticks():
+	tick.label.set_fontsize(20)
 #xlabel=['One Pile', 'Four Pile', 'Sixteen Pile']
 #xtickNames = plt.setp(ax1, xticklabels=np.tile(xlabel, 4))
 #plt.setp(xtickNames, rotation=90, fontsize=20)
@@ -213,17 +220,21 @@ plt.figtext(0.890, 0.045, '*', color='white', backgroundcolor='silver',
 plt.figtext(0.895, 0.045, ' Average Value', color='black', weight='roman',
             size=20)
 #Adding Category
-plt.figtext(0.27, 0.20, 'Linear Detrending', color='black', weight='roman',
-            size=20)
-#Original One
+##Original One
+#plt.figtext(0.10, 0.20, 'Linear Detrending', color='black', weight='roman',
+#            size=25)
 #plt.figtext(0.33, 0.20, 'Constant Detrending', color='black', weight='roman',
-#            size=20)
-#For SitefidelityGraph
-plt.figtext(0.70, 0.18, 'Constant Detrending', color='black', weight='roman',
-            size=20)
+#            size=25)
 #plt.figtext(0.55, 0.18, 'Linear Detrending with\n    Difference in Rate', color='black', weight='roman',
-#            size=20)
+#            size=25)
 #plt.figtext(0.75, 0.18, 'Constant Detrending with\n  Difference in Rate', color='black', weight='roman',
+#            size=25)
+#For SitefidelityGraph
+#plt.figtext(0.33, 0.18, 'Constant Detrending With Change of Rate', color='black', weight='roman',
 #            size=20)
+
+#plt.figtext(0.65, 0.18, 'Constant Detrending', color='black', weight='roman',
+#           size=20)
+
 
 plt.show()
